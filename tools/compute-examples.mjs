@@ -125,6 +125,30 @@ const signature = createHmac("sha256", kNone)
   .toString("base64");
 
 // ---------------------------------------------------------------------------
+// Drift guard: every computed value published in index.html (Appendix A) is
+// asserted here, so editing an input without updating the spec (or vice
+// versa) makes this script exit non-zero instead of silently diverging.
+// ---------------------------------------------------------------------------
+
+const PUBLISHED = {
+  ath: "WKXpcs5xM2Dyko2M0gv0NC8vjApybvIBdn17lZ7izG0",
+  jkt: RFC9449_JKT,
+  sessionId: "AAECAwQFBgcICQoLDA0ODw",
+  keyNone: "EBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8",
+  ekmExample: "QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl8",
+  kExporter: "B2D8_PhuOLMzvM9-ND2aVCXoz8ADWeTfhqiZV3yUvD4",
+  confirm: "gvocwuudE9yiXXU5jINFTekorDybyEj_tQWPljW8eRA",
+  signature: "hPkuPd32xbb4hUjR/hjbj0Cp445ZfWoOgrcq8+f3I3g=",
+};
+assert.equal(ath, PUBLISHED.ath, "ath drifted from the published example");
+assert.equal(sessionId, PUBLISHED.sessionId, "session_id drifted");
+assert.equal(b64u(kNone), PUBLISHED.keyNone, "cb=none key drifted");
+assert.equal(b64u(ekm), PUBLISHED.ekmExample, "example EKM drifted");
+assert.equal(b64u(kExporter), PUBLISHED.kExporter, "derived K drifted");
+assert.equal(confirm, PUBLISHED.confirm, "confirm value drifted");
+assert.equal(signature, PUBLISHED.signature, "HMAC signature drifted");
+
+// ---------------------------------------------------------------------------
 // Output
 // ---------------------------------------------------------------------------
 

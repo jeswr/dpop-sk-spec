@@ -532,17 +532,19 @@ Signature: sig=:hPkuPd32xbb4hUjR/hjbj0Cp445ZfWoOgrcq8+f3I3g=:
 <section id="anti-replay">
   <h2>Anti-replay: the sliding window</h2>
   <p>
-    The <code>nonce</code> parameter carries a per-session counter: the client MUST set it to
-    <code>1</code> on its first attested request and increase it by exactly 1 per attested
-    request; values MUST fit in an unsigned 64-bit integer, MUST NOT be reused, and a client that
-    could exhaust the space MUST re-establish first (at 2<sup>64</sup>−1 values this is
-    theoretical). Servers MUST reject non-numeric, zero, or &gt;64-bit values at parse time.
+    The <code>nonce</code> parameter carries a per-session counter: the client MUST start at
+    <code>1</code> and assign strictly increasing values — never reusing one — and SHOULD
+    increment by exactly 1 (gaps are tolerated but waste window space). Values MUST fit in an
+    unsigned 64-bit integer, and a client that could exhaust the space MUST re-establish first
+    (at 2<sup>64</sup>−1 values this is theoretical). Servers MUST reject non-numeric, zero, or
+    &gt;64-bit values at parse time.
   </p>
   <p>
     The server maintains, per session, the receive window of [[RFC4303]] Section 3.4.3: a
     high-water mark <code>H</code> (the highest <em>authenticated</em> counter value — RFC 4303's
-    "right edge of the window represents the highest, validated Sequence Number") and a bitmap of
-    the <code>W</code> values below it. <code>W</code> MUST be at least 128 and SHOULD be 1024.
+    "right edge of the window represents the highest, validated Sequence Number") and a bitmap
+    covering exactly the <code>W</code> values <code>H − W + 1 … H</code> (the window includes
+    <code>H</code> itself). <code>W</code> MUST be at least 128 and SHOULD be 1024.
     (RFC 4303's own minimum of 32 and default of 64 target IPsec; HTTP/2 multiplexing routinely
     completes more concurrent requests out of order, which is precisely what the window — as
     opposed to a strictly-increasing rule, which would spuriously reject valid in-flight
@@ -552,7 +554,7 @@ Signature: sig=:hPkuPd32xbb4hUjR/hjbj0Cp445ZfWoOgrcq8+f3I3g=:
   <ul>
     <li><code>n &gt; H</code>: advance the window (shift the bitmap by <code>n − H</code>, set
       <code>H = n</code>), mark <code>n</code>. Accept.</li>
-    <li><code>H − W &lt; n ≤ H</code>: if the bitmap bit for <code>n</code> is set, reject
+    <li><code>H − W + 1 ≤ n ≤ H</code>: if the bitmap bit for <code>n</code> is set, reject
       (duplicate); otherwise mark it and accept.</li>
     <li><code>n ≤ H − W</code>: reject (below the window).</li>
   </ul>
