@@ -1,0 +1,9 @@
+{
+  "name": "dpop-sk-spec",
+  "kind": "specification",
+  "status": "design",
+  "description": "DPoP-SK: Negotiated Symmetric Session Keys for DPoP-Bound Requests — unofficial Solid CG-shaped editor's draft (RFC 9449 establishment + RFC 9421 hmac-sha256 attestation + RFC 8446 tls-exporter binding + RFC 4303 sliding-window anti-replay, advertised via RFC 9728).",
+  "conformsTo": [],
+  "relatedRepos": ["jeswr/solid-server-rs", "jeswr/prod-solid-server", "jeswr/solid-dpop"],
+  "tr": "solidproject.org/TR/ (target, on CG adoption)"
+}
