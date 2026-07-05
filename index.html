@@ -42,6 +42,12 @@
           href: "https://github.com/jeswr/solid-server-rs/tree/main/bench",
           publisher: "jeswr/solid-server-rs",
           status: "Generated measurement records"
+        },
+        "JLWS-CORE": {
+          title: "JLWS — Linked Web Storage (clean-slate editor's draft)",
+          href: "https://github.com/jeswr/lws-spec",
+          authors: ["Jesse Wright"],
+          status: "Personal editor's draft (unofficial; experimental)"
         }
       }
     };
@@ -135,6 +141,46 @@
       proof header field, the proof being replaced by the negotiated message signature — the
       deviation is valid only inside an established DPoP-SK session and is flagged inline.
     </p>
+    <section id="relationship-jlws">
+      <h4>Relationship to Linked Web Storage (JLWS)</h4>
+      <p>
+        JLWS ([[JLWS-CORE]]) discovers its authorization surface through the same [[RFC9728]]
+        protected resource metadata this profile negotiates through, so DPoP-SK composes with a
+        JLWS realm without any new mechanism: the <code>pop_session</code> member
+        (<a href="#discovery"></a>) appears in the realm's metadata document beside JLWS's
+        <code>jlws_storage_description</code> member ([[JLWS-CORE]] <em>Authorization server
+        discovery</em>), and the token whose presentation this profile accelerates is the
+        realm-audienced access token JLWS obtains by [[RFC8693]] token exchange — its single
+        <code>aud</code> value is the challenge's <code>realm</code>, and the storage server's
+        validation accepts it only for resources that audience logically contains
+        ([[JLWS-CORE]] <em>Validation by the storage server</em>, step 3). A DPoP-SK session
+        therefore spans exactly the resources of one JLWS realm, and the per-request
+        attestation re-proves possession for requests inside that audience. Two scoping notes:
+      </p>
+      <ul>
+        <li>JLWS's baseline presentation is <strong>Bearer</strong> ([[JLWS-CORE]] <em>Token
+          presentation</em>), unlike Solid-OIDC. This profile's never-bare rule is a property
+          of <strong>DPoP-bound tokens</strong>: the tokens this profile operates on always
+          carry <code>cnf</code>, and a JLWS server already refuses any <code>cnf</code>-bound
+          token presented bare ([[JLWS-CORE]] <em>Validation by the storage server</em>,
+          step 5). Bearer tokens without <code>cnf</code> on a Bearer-baseline realm are
+          outside this profile's scope — for a non-opting client, a JLWS server is observed
+          unchanged, exactly as this profile already promises for Solid servers.</li>
+        <li>A JLWS realm designated PoP-required signals it with
+          <code>dpop_bound_access_tokens_required: true</code> ([[RFC9728]] Section 2); that
+          single member covers DPoP-SK too, since every DPoP-SK session is established from a
+          DPoP-bound access token (<a href="#establishment"></a>). This profile deliberately
+          mints no separate required-member; DPoP-SK <em>availability</em> is signalled by
+          <code>pop_session</code>'s presence alone (<a href="#discovery"></a>).</li>
+      </ul>
+      <p>
+        No normative change to establishment, key derivation, attestation, anti-replay,
+        lifetime, or downgrade rules results from this composition: they transfer verbatim.
+        The composition record, including where the JLWS-side conformance vectors home, is
+        <a href="https://github.com/jeswr/dpop-sk-spec/blob/main/docs/lws-alignment.md">
+        <code>docs/lws-alignment.md</code></a>.
+      </p>
+    </section>
   </section>
 </section>
 

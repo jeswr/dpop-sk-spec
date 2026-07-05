@@ -126,3 +126,25 @@ signature would not be reproducible).
 The repo is a spec + one stdlib script: no dependencies, no lockfile, no dist, nothing for
 `ignore-scripts` to guard (an `.npmrc` is present anyway, defensively). Gates: roborev on every
 commit; `node tools/compute-examples.mjs` must exit 0 (the assert is the test).
+
+## D15. LWS alignment: auth-layer profile on a JLWS realm, RFC 9728-negotiated; no new members
+
+Alignment with the JLWS clean-slate Linked Web Storage draft (`jeswr/lws-spec`; its
+DECISIONS.md D21 / `docs/alignment/dpop-sk.md` is the composition design). JLWS names
+DPoP-SK as the second of its two negotiated PoP presentation profiles and discovers its
+auth surface through the same RFC 9728 protected resource metadata this profile negotiates
+through, so the composition costs **zero new mechanism**: `pop_session` sits beside JLWS's
+`jlws_storage_description` in the realm's PRM, and the attested token is the
+realm-audienced single-`aud` token of JLWS's RFC 8693 exchange (attestation scope =
+audience containment ∘ per-request `@method`/`@target-uri` binding). The spec gains an
+informative *Relationship to Linked Web Storage (JLWS)* subsection with two scoping notes:
+(a) the never-bare rule is a property of `cnf`-bound tokens — JLWS's Bearer baseline (its
+D9/S2) is out of this profile's scope and unweakened by it; (b) a PoP-required JLWS realm
+signals with RFC 9728's registered `dpop_bound_access_tokens_required: true`, which covers
+DPoP-SK too because every session is established from a DPoP-bound token — this profile
+deliberately mints **no separate required-member** (the JLWS-side alignment fixed a JLWS
+sentence that assumed one existed). Detail + vector homing in `docs/lws-alignment.md`; the
+8 DPoP-SK×JLWS server-surface vectors home in `lws-spec/test-vectors/vectors/dpop-sk/`
+(only the `channel_bindings: none` flavour is deterministic; `tls-exporter` stays in that
+suite's GAPS.md). **Rejected:** a `pop_session.required` member (redundant with the
+registered RFC 9728 member; two switches for one property invites disagreement).
