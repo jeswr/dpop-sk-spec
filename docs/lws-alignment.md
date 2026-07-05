@@ -83,11 +83,13 @@ transfer verbatim.
 
 Per the homing rule of `lws-spec/docs/alignment/conformance-vectors.md` (server/AS surface
 → `lws-spec/test-vectors/`; pure agent-layer functions → `agentic-solid-conformance`), the
-DPoP-SK×JLWS vectors are **server-surface** and home in
-`lws-spec/test-vectors/vectors/dpop-sk/`: PRM shape (3 cases: `pop_session` +
-`jlws_storage_description` coexistence, unknown-profile fail-closed, PoP-required
-single-member), establishment with `channel_bindings: none` (deterministic HKDF from
-committed TEST-ONLY material), and attestation accept / bad-signature / replay / expired
-(8 cases, specified in `lws-spec/docs/alignment/dpop-sk.md` §3). The `tls-exporter`
-flavour remains un-vectorable (it needs a live TLS exporter interface) and stays in that
-suite's GAPS.md.
+DPoP-SK×JLWS vectors are **server-surface** and home in `lws-spec/test-vectors/` as a
+planned `vectors/dpop-sk/` suite — **specified, not yet landed** (8 cases in
+`lws-spec/docs/alignment/dpop-sk.md` §3, riding the implementation increment): PRM shape
+(3 cases: `pop_session` + `jlws_storage_description` coexistence, unknown-profile
+fail-closed, PoP-required single-member), establishment with `channel_bindings: none`
+(deterministic HKDF from committed TEST-ONLY material), and attestation accept /
+bad-signature / replay / expired. Until that suite lands, the deferral is recorded in
+that repository's `test-vectors/GAPS.md` (the `core#rs-validation` row). The
+`tls-exporter` flavour remains un-vectorable either way (it needs a live TLS exporter
+interface) and stays in that GAPS.md permanently.

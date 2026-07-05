@@ -144,7 +144,8 @@ signals with RFC 9728's registered `dpop_bound_access_tokens_required: true`, wh
 DPoP-SK too because every session is established from a DPoP-bound token — this profile
 deliberately mints **no separate required-member** (the JLWS-side alignment fixed a JLWS
 sentence that assumed one existed). Detail + vector homing in `docs/lws-alignment.md`; the
-8 DPoP-SK×JLWS server-surface vectors home in `lws-spec/test-vectors/vectors/dpop-sk/`
-(only the `channel_bindings: none` flavour is deterministic; `tls-exporter` stays in that
-suite's GAPS.md). **Rejected:** a `pop_session.required` member (redundant with the
+8 DPoP-SK×JLWS server-surface vectors home in `lws-spec/test-vectors/` as a planned
+`vectors/dpop-sk/` suite (specified in that repo's alignment doc, landing with its
+implementation increment; only the `channel_bindings: none` flavour is deterministic —
+`tls-exporter` stays in that suite's GAPS.md). **Rejected:** a `pop_session.required` member (redundant with the
 registered RFC 9728 member; two switches for one property invites disagreement).
