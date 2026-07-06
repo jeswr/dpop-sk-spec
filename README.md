@@ -41,6 +41,7 @@ mints a dedicated exporter label instead).
 | `index.html` | The specification (ReSpec) |
 | `DECISIONS.md` | Numbered design decisions + rationale, incl. divergences from the design proposal |
 | `tools/compute-examples.mjs` | Generates every computed value in the spec's worked example (`node tools/compute-examples.mjs`; Node ≥ 20, stdlib only; self-checks the `jkt` against RFC 9449 §6.1's published value) |
+| `spec.statements.ttl` | Machine-readable normative-statement companion (Turtle sidecar): every normative statement as an anchored `spec:Requirement` with a verbatim quote, RFC 2119 level, conformance-class binding, testability tag and honest test-gap accounting. COMPLEMENTARY — `index.html` remains the sole normative text. Format/shapes/validator: [jeswr/spec-companion](https://github.com/jeswr/spec-companion); validate with `node <spec-companion>/tools/validate.mjs spec.statements.ttl --spec-html index.html` |
 
 ## Provenance
 
